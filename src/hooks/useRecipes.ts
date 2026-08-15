@@ -45,18 +45,14 @@ Respond ONLY with a valid JSON array. No markdown, no explanation, no backticks.
 ]`
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
-          messages: [{ role: 'user', content: prompt }],
-        }),
+        body: JSON.stringify({ prompt }),
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error.message)
-      const text = data.content[0].text
+      const text = data.candidates[0].content.parts[0].text
       const clean = text.replace(/```json|```/g, '').trim()
       const parsed: Recipe[] = JSON.parse(clean)
       setRecipes(parsed)
