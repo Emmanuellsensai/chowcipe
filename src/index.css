@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: #1C1006;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #FAF0DC;
+  overflow-x: hidden;
+}
+/* Hides the scrollbar on elements carrying the [scrollbar-width:none] utility class. */
+.\[scrollbar-width\:none\]::-webkit-scrollbar { display: none; }
