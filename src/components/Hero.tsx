@@ -31,7 +31,6 @@ function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
       <video
         ref={ref}
         src={dish.videoSrc}
-        poster={dish.poster}
         muted
         autoPlay
         loop
@@ -40,6 +39,51 @@ function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
         className="h-full w-full object-cover"
       />
     </div>
+  )
+}
+
+function DishThumb({
+  dish,
+  isActive,
+  onSelect,
+}: {
+  dish: Dish;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  const [posterFailed, setPosterFailed] = useState(false)
+
+  const ring = isActive ? 'border-cream opacity-100' : 'border-transparent opacity-60'
+
+  return (
+    <button
+      onClick={onSelect}
+      aria-label={`Show ${dish.name}`}
+      aria-pressed={isActive}
+      className="flex flex-col items-center gap-1.5 shrink-0"
+    >
+      <span
+        className={`h-1 w-1 rounded-full bg-cream transition-opacity duration-300 ${
+          isActive ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      {posterFailed ? (
+        <div
+          style={{ background: dish.fallbackColor }}
+          className={`h-10 w-10 rounded-full border-2 flex items-center justify-center font-semibold text-sm text-white transition-all duration-300 ${ring}`}
+        >
+          {dish.name.charAt(0).toUpperCase()}
+        </div>
+      ) : (
+        <img
+          src={dish.poster}
+          alt={dish.name}
+          onError={() => setPosterFailed(true)}
+          style={{ background: dish.fallbackColor }}
+          className={`h-10 w-10 rounded-full object-cover border-2 transition-all duration-300 ${ring}`}
+        />
+      )}
+    </button>
   )
 }
 
@@ -110,32 +154,14 @@ export default function Hero({ onStart }: HeroProps) {
           </div>
 
           <div className="flex flex-nowrap items-center justify-center gap-3 overflow-x-auto md:overflow-visible [scrollbar-width:none]">
-            {DISHES.map((dish, i) => {
-              const isActive = i === active
-              return (
-                <button
-                  key={dish.id}
-                  onClick={() => setActive(i)}
-                  aria-label={`Show ${dish.name}`}
-                  aria-pressed={isActive}
-                  className="flex flex-col items-center gap-1.5 shrink-0"
-                >
-                  <span
-                    className={`h-1 w-1 rounded-full bg-cream transition-opacity duration-300 ${
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                  <img
-                    src={dish.poster}
-                    alt={dish.name}
-                    style={{ background: dish.fallbackColor }}
-                    className={`h-10 w-10 rounded-full object-cover border-2 transition-all duration-300 ${
-                      isActive ? 'border-cream opacity-100' : 'border-transparent opacity-60'
-                    }`}
-                  />
-                </button>
-              )
-            })}
+            {DISHES.map((dish, i) => (
+              <DishThumb
+                key={dish.id}
+                dish={dish}
+                isActive={i === active}
+                onSelect={() => setActive(i)}
+              />
+            ))}
           </div>
         </div>
       </div>
