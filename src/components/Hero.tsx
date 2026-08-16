@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { DISHES, Dish } from '../data/dishes'
-import { usePexelsVideo } from '../hooks/usePexelsVideo'
 
 interface HeroProps {
   onStart?: () => void;
 }
 
 function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
-  const { videoUrl, posterUrl, loading } = usePexelsVideo(dish.pexelsQuery, dish.fallbackVideoId)
   const ref = useRef<HTMLVideoElement | null>(null)
 
+  // Only the active video plays — the other nine stay paused to save memory.
   useEffect(() => {
     const el = ref.current
     if (!el) return
@@ -19,7 +18,7 @@ function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
     } else {
       el.pause()
     }
-  }, [active, videoUrl])
+  }, [active])
 
   return (
     <div
@@ -27,80 +26,45 @@ function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
         active ? 'opacity-100' : 'opacity-0'
       }`}
       aria-hidden={!active}
+      style={{ background: dish.fallbackColor }}
     >
-      <div className="absolute inset-0" style={{ background: dish.fallbackColor }} />
-      {!loading && videoUrl && (
-        <video
-          ref={ref}
-          src={videoUrl}
-          poster={posterUrl ?? undefined}
-          muted
-          autoPlay
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      )}
+      <video
+        ref={ref}
+        src={dish.videoSrc}
+        poster={dish.poster}
+        muted
+        autoPlay
+        loop
+        playsInline
+        preload="metadata"
+        className="h-full w-full object-cover"
+      />
     </div>
   )
 }
 
-function DishThumb({ dish, active, onSelect }: { dish: Dish; active: boolean; onSelect: () => void }) {
-  const { posterUrl } = usePexelsVideo(dish.pexelsQuery, dish.fallbackVideoId)
-
-  return (
-    <button
-      onClick={onSelect}
-      aria-label={`Show ${dish.name}`}
-      aria-pressed={active}
-      className="flex flex-col items-center gap-1.5 shrink-0"
-    >
-      <span
-        className={`h-1 w-1 rounded-full bg-cream transition-opacity duration-300 ${
-          active ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-      {posterUrl ? (
-        <img
-          src={posterUrl}
-          alt={dish.name}
-          className={`h-10 w-10 md:h-14 md:w-14 rounded-full object-cover border-2 transition-all duration-300 ${
-            active ? 'border-cream opacity-100' : 'border-transparent opacity-50'
-          }`}
-        />
-      ) : (
-        <span
-          style={{ background: dish.fallbackColor }}
-          className={`h-10 w-10 md:h-14 md:w-14 rounded-full border-2 transition-all duration-300 ${
-            active ? 'border-cream opacity-100' : 'border-transparent opacity-50'
-          }`}
-        />
-      )}
-    </button>
-  )
-}
-
 export default function Hero({ onStart }: HeroProps) {
-  const [index, setIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [active, setActive] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
 
   useEffect(() => {
-    if (paused) return
-    const id = setInterval(() => setIndex((i) => (i + 1) % DISHES.length), 5000)
-    return () => clearInterval(id)
-  }, [paused])
+    if (isPaused) return
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % DISHES.length)
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [isPaused])
 
-  const activeDish = DISHES[index]
+  const activeDish = DISHES[active]
 
   return (
     <section
       className="relative h-screen w-full overflow-hidden"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       {DISHES.map((dish, i) => (
-        <DishVideo key={dish.id} dish={dish} active={i === index} />
+        <DishVideo key={dish.id} dish={dish} active={i === active} />
       ))}
 
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/40 via-black/10 to-black/70" />
@@ -126,34 +90,52 @@ export default function Hero({ onStart }: HeroProps) {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-6">
-          <div key={activeDish.name} className="animate-fadeUp">
-            <h2 className="font-playfair font-normal text-cream text-2xl md:text-4xl">
-              {activeDish.name}
-            </h2>
-            <p className="font-dm text-xs uppercase tracking-wide text-crayfish mt-1">
-              {activeDish.tribe}
-            </p>
-            <p className="font-dm text-sm text-cream/60 mt-1 hidden md:block">
-              {activeDish.tagline}
-            </p>
-          </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-end">
+            <div key={activeDish.name} className="animate-fadeUp">
+              <h2 className="font-playfair font-normal text-cream text-2xl md:text-4xl">
+                {activeDish.name}
+              </h2>
+              <p className="font-dm text-xs uppercase tracking-wide text-crayfish mt-1">
+                {activeDish.tribe}
+              </p>
+              <p className="font-dm text-sm text-cream/60 mt-1 hidden md:block">
+                {activeDish.tagline}
+              </p>
+            </div>
 
-          <div className="flex flex-row gap-2 md:gap-3 overflow-x-auto md:justify-center [scrollbar-width:none]">
-            {DISHES.map((dish, i) => (
-              <DishThumb
-                key={dish.id}
-                dish={dish}
-                active={i === index}
-                onSelect={() => setIndex(i)}
-              />
-            ))}
-          </div>
-
-          <div className="hidden md:flex justify-end">
-            <span className="font-dm text-xs uppercase tracking-widest text-crayfish">
+            <span className="hidden md:block font-dm text-xs uppercase tracking-widest text-crayfish">
               Scroll to explore
             </span>
+          </div>
+
+          <div className="flex flex-nowrap items-center justify-center gap-3 overflow-x-auto md:overflow-visible [scrollbar-width:none]">
+            {DISHES.map((dish, i) => {
+              const isActive = i === active
+              return (
+                <button
+                  key={dish.id}
+                  onClick={() => setActive(i)}
+                  aria-label={`Show ${dish.name}`}
+                  aria-pressed={isActive}
+                  className="flex flex-col items-center gap-1.5 shrink-0"
+                >
+                  <span
+                    className={`h-1 w-1 rounded-full bg-cream transition-opacity duration-300 ${
+                      isActive ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                  <img
+                    src={dish.poster}
+                    alt={dish.name}
+                    style={{ background: dish.fallbackColor }}
+                    className={`h-10 w-10 rounded-full object-cover border-2 transition-all duration-300 ${
+                      isActive ? 'border-cream opacity-100' : 'border-transparent opacity-60'
+                    }`}
+                  />
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>

@@ -11,6 +11,17 @@ export function useRecipes() {
     setError('')
     setRecipes([])
 
+    const cacheKey = 'chowcipe_recipes_' + [...ingredients].sort().join(',')
+
+    try {
+      const cached = localStorage.getItem(cacheKey)
+      if (cached) {
+        setRecipes(JSON.parse(cached))
+        setLoading(false)
+        return
+      }
+    } catch {}
+
     const prompt = `You are an expert Nigerian food chef and nutritionist. The user has these ingredients at home: ${ingredients.join(', ')}.
 
 ${recentMeals.length > 0 ? `They have recently eaten: ${recentMeals.join(', ')}. Avoid suggesting these if possible to encourage variety.` : ''}
@@ -45,17 +56,47 @@ Respond ONLY with a valid JSON array. No markdown, no explanation, no backticks.
 ]`
 
     try {
-      const res = await fetch('/api/recipes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      })
-      const data = await res.json()
-      if (data.error) throw new Error(data.error.message)
-      const text = data.candidates[0].content.parts[0].text
+      const isDev = import.meta.env.DEV
+
+      let responseData
+
+      if (isDev) {
+        // Call Gemini directly in development (no serverless functions under `npm run dev`)
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 8000,
+                thinkingConfig: { thinkingBudget: 0 },
+              },
+            }),
+          }
+        )
+        responseData = await res.json()
+      } else {
+        // Use serverless proxy in production to protect the key
+        const res = await fetch('/api/recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt }),
+        })
+        responseData = await res.json()
+      }
+
+      if (responseData.error) throw new Error(responseData.error.message)
+      const text = responseData.candidates[0].content.parts[0].text
       const clean = text.replace(/```json|```/g, '').trim()
       const parsed: Recipe[] = JSON.parse(clean)
       setRecipes(parsed)
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(parsed))
+        localStorage.setItem('chowcipe_last_recipes', JSON.stringify(parsed))
+      } catch {}
     } catch {
       setError('Could not load recipes. Please try again.')
     }

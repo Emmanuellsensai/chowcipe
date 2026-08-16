@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Recipe } from '../types'
 
 interface RecipeCardProps {
@@ -5,14 +6,46 @@ interface RecipeCardProps {
   onClick: () => void;
 }
 
-const DIFFICULTY_GRADIENT: Record<Recipe['difficulty'], string> = {
-  Easy: 'linear-gradient(135deg, #E8820C 0%, #8B4A00 100%)',
-  Medium: 'linear-gradient(135deg, #C0392B 0%, #5C1A12 100%)',
-  Hard: 'linear-gradient(135deg, #3B1F00 0%, #1C1006 100%)',
+// Checked in order — the first keyword found in the dish name wins.
+// Specific dishes come before generic ingredients so "Ofada Rice" doesn't
+// match the generic "rice" clip.
+const VIDEO_KEYWORDS: [string, string][] = [
+  ['jollof', 'jollof'],
+  ['egusi', 'egusi'],
+  ['ewa agoyin', 'ewa-agoyin'],
+  ['suya', 'suya'],
+  ['pounded yam', 'pounded-yam'],
+  ['akara', 'akara'],
+  ['banga', 'banga'],
+  ['moi moi', 'moi-moi'],
+  ['ofada', 'ofada'],
+  ['pepper soup', 'pepper-soup'],
+  ['plantain', 'plantain'],
+  ['dodo', 'plantain'],
+  ['ewa', 'ewa-agoyin'],
+  ['beans', 'beans'],
+  ['chicken', 'chicken'],
+  ['rice', 'rice'],
+]
+
+function getLocalVideo(name: string): string | null {
+  const dish = name.toLowerCase()
+  for (const [keyword, slug] of VIDEO_KEYWORDS) {
+    if (dish.includes(keyword)) return `/videos/${slug}.mp4`
+  }
+  return null
+}
+
+function getLocalPoster(name: string): string | null {
+  const video = getLocalVideo(name)
+  return video ? video.replace(/\.mp4$/, '-poster.jpg') : null
 }
 
 export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   const missingCount = recipe.missingIngredients?.length ?? 0
+  const [videoFailed, setVideoFailed] = useState(false)
+  const videoSrc = getLocalVideo(recipe.name)
+  const posterSrc = getLocalPoster(recipe.name)
 
   return (
     <article
@@ -27,16 +60,25 @@ export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
       }}
       className="bg-clay-card rounded-2xl overflow-hidden cursor-pointer hover:ring-1 hover:ring-palm-oil/50 transition"
     >
-      <div className="h-40 relative">
-        {recipe.imageUrl ? (
-          <img src={recipe.imageUrl} alt={recipe.name} className="h-full w-full object-cover" />
-        ) : (
-          <div
-            className="h-full w-full"
-            style={{ background: DIFFICULTY_GRADIENT[recipe.difficulty] ?? DIFFICULTY_GRADIENT.Medium }}
-          />
-        )}
-      </div>
+      {videoSrc && !videoFailed ? (
+        <video
+          src={videoSrc}
+          poster={posterSrc ?? undefined}
+          muted
+          autoPlay
+          loop
+          playsInline
+          preload="metadata"
+          onError={() => setVideoFailed(true)}
+          className="h-48 w-full object-cover rounded-t-2xl"
+        />
+      ) : (
+        <div className="h-48 w-full rounded-t-2xl bg-gradient-to-br from-palm-oil/40 to-buka-red/40 flex items-center justify-center">
+          <span className="font-playfair text-4xl text-cream">
+            {recipe.name.charAt(0).toUpperCase()}
+          </span>
+        </div>
+      )}
 
       <div className="p-4">
         <p className="font-dm text-[11px] uppercase tracking-wide text-crayfish">{recipe.tribe}</p>
