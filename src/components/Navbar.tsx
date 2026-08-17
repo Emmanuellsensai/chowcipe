@@ -37,10 +37,12 @@ export default function Navbar({ onStart, ctaLabel = 'Start cooking', items = DE
     >
       <button
         onClick={onStart}
-        className="font-dm font-semibold text-2xl text-palm-oil tracking-tight"
+        className="flex items-center gap-2"
         aria-label="Chowcipe home"
       >
-        Chowcipe
+        {/* Decorative: the wordmark beside it already says "Chowcipe". */}
+        <img src="/images/logo-navbar.svg" alt="" className="h-7 w-auto" />
+        <span className="font-dm font-bold text-xl text-palm-oil tracking-tight">Chowcipe</span>
       </button>
 
       <nav className="flex items-center gap-8">

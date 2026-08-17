@@ -26,9 +26,9 @@ export default function Landing({ onStart }: LandingProps) {
         <HowItWorks />
         <Features />
         <BottomCTA onStart={onStart} />
-      <footer className="px-6 py-10 md:px-12 lg:px-20 border-t border-cream/10">
-        <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-3">
-          <span className="font-dm font-semibold text-palm-oil text-xl">Chowcipe</span>
+      <footer className="px-6 py-12 md:px-12 lg:px-20 border-t border-cream/10">
+        <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <img src="/images/logo-full.svg" alt="Chowcipe" className="h-40 w-auto" />
           <p className="font-dm text-xs text-crayfish">
             Built for WEMA Hackaholics 7.0. Cook what you already have.
           </p>
