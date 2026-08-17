@@ -6,10 +6,15 @@ interface RecipeCardProps {
   onClick: () => void;
 }
 
-// Checked in order — the first keyword found in the dish name wins.
-// Specific dishes come before generic ingredients so "Ofada Rice" doesn't
-// match the generic "rice" clip.
-const VIDEO_KEYWORDS: [string, string][] = [
+// Checked in order — the first keyword found in the dish name wins, so the
+// two-word keys sit above the single-word ones.
+//
+// Every slug here must have a matching /public/images/<slug>-poster.jpg.
+// A keyword with no image is worse than no keyword at all: it costs a 404
+// before landing on the same gradient fallback an unmatched dish gets for
+// free. To add one back (plantain, beans, chicken, rice), save the image
+// first, then restore the row.
+const IMAGE_KEYWORDS: [string, string][] = [
   ['jollof', 'jollof'],
   ['egusi', 'egusi'],
   ['ewa agoyin', 'ewa-agoyin'],
@@ -20,32 +25,21 @@ const VIDEO_KEYWORDS: [string, string][] = [
   ['moi moi', 'moi-moi'],
   ['ofada', 'ofada'],
   ['pepper soup', 'pepper-soup'],
-  ['plantain', 'plantain'],
-  ['dodo', 'plantain'],
   ['ewa', 'ewa-agoyin'],
-  ['beans', 'beans'],
-  ['chicken', 'chicken'],
-  ['rice', 'rice'],
 ]
 
-function getLocalVideo(name: string): string | null {
+function getLocalImage(name: string): string | null {
   const dish = name.toLowerCase()
-  for (const [keyword, slug] of VIDEO_KEYWORDS) {
-    if (dish.includes(keyword)) return `/videos/${slug}.mp4`
+  for (const [keyword, slug] of IMAGE_KEYWORDS) {
+    if (dish.includes(keyword)) return `/images/${slug}-poster.jpg`
   }
   return null
 }
 
-function getLocalPoster(name: string): string | null {
-  const video = getLocalVideo(name)
-  return video ? video.replace(/\.mp4$/, '-poster.jpg') : null
-}
-
 export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   const missingCount = recipe.missingIngredients?.length ?? 0
-  const [videoFailed, setVideoFailed] = useState(false)
-  const videoSrc = getLocalVideo(recipe.name)
-  const posterSrc = getLocalPoster(recipe.name)
+  const [imageFailed, setImageFailed] = useState(false)
+  const imageSrc = getLocalImage(recipe.name)
 
   return (
     <article
@@ -58,18 +52,15 @@ export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
           onClick()
         }
       }}
-      className="bg-clay-card rounded-2xl overflow-hidden cursor-pointer hover:ring-1 hover:ring-palm-oil/50 transition"
+      className="glass-card overflow-hidden cursor-pointer hover:ring-1 hover:ring-palm-oil/50 transition"
     >
-      {videoSrc && !videoFailed ? (
-        <video
-          src={videoSrc}
-          poster={posterSrc ?? undefined}
-          muted
-          autoPlay
-          loop
-          playsInline
-          preload="metadata"
-          onError={() => setVideoFailed(true)}
+      {imageSrc && !imageFailed ? (
+        <img
+          src={imageSrc}
+          alt={recipe.name}
+          loading="lazy"
+          decoding="async"
+          onError={() => setImageFailed(true)}
           className="h-48 w-full object-cover rounded-t-2xl"
         />
       ) : (

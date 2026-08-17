@@ -12,3 +12,74 @@ body {
 }
 /* Hides the scrollbar on elements carrying the [scrollbar-width:none] utility class. */
 .\[scrollbar-width\:none\]::-webkit-scrollbar { display: none; }
+
+/* ── Liquid glass ────────────────────────────────────────────────────────────
+   Frosted translucent surfaces over the solid clay body. Declared in the
+   components layer so Tailwind utilities (rounded-*, p-*, hover:*) still win
+   at call sites — but note a `bg-*` utility on the same element will override
+   the frosted background, so don't pair these with bg-clay-card.
+   backdrop-filter needs something behind it: the body background stays solid. */
+@layer components {
+  /* The top-down sheen is what sells it as glass rather than tint: a bright
+     specular edge fading into the surface, over a heavier blur. */
+  .glass-card {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(250, 240, 220, 0.08) 0%,
+        rgba(250, 240, 220, 0.02) 35%,
+        rgba(250, 240, 220, 0) 70%
+      ),
+      rgba(42, 26, 10, 0.28);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(250, 240, 220, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(250, 240, 220, 0.18),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+    border-radius: 20px;
+  }
+
+  .glass-card-strong {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(250, 240, 220, 0.1) 0%,
+        rgba(250, 240, 220, 0.03) 35%,
+        rgba(250, 240, 220, 0) 70%
+      ),
+      rgba(42, 26, 10, 0.42);
+    backdrop-filter: blur(52px) saturate(220%);
+    -webkit-backdrop-filter: blur(52px) saturate(220%);
+    border: 1px solid rgba(250, 240, 220, 0.15);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(250, 240, 220, 0.22),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+  }
+
+  .glass-subtle {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(250, 240, 220, 0.06) 0%,
+        rgba(250, 240, 220, 0) 60%
+      ),
+      rgba(42, 26, 10, 0.16);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(250, 240, 220, 0.09);
+    box-shadow: inset 0 1px 0 rgba(250, 240, 220, 0.12);
+    border-radius: 16px;
+  }
+
+  .glass-nav {
+    background: rgba(28, 16, 6, 0.65);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border-bottom: 1px solid rgba(250, 240, 220, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+}

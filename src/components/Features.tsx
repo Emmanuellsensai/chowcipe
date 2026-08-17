@@ -167,7 +167,7 @@ const FEATURES = [
 
 export default function Features() {
   return (
-    <section id="features" className="bg-clay px-6 pb-20 md:px-12 md:pb-28 lg:px-20">
+    <section id="features" className="px-6 pb-20 md:px-12 md:pb-28 lg:px-20">
       <div className="mx-auto max-w-6xl">
         <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
           What you get

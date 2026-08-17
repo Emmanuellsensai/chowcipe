@@ -31,7 +31,7 @@ export default function Navbar({ onStart, ctaLabel = 'Start cooking', items = DE
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 hidden md:flex items-center justify-between px-12 lg:px-20 py-4 bg-clay/80 backdrop-blur-sm transition-colors duration-300 ${
+      className={`glass-nav fixed top-0 left-0 right-0 z-50 hidden md:flex items-center justify-between px-12 lg:px-20 py-4 transition-colors duration-300 ${
         scrolled ? 'border-b border-cream/10' : 'border-b border-transparent'
       }`}
     >

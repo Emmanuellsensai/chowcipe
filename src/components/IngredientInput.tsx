@@ -42,7 +42,7 @@ export default function IngredientInput({ tags, onAdd, onRemove }: IngredientInp
     <div className="relative">
       <div
         onClick={() => inputRef.current?.focus()}
-        className="bg-clay-card rounded-2xl border border-cream/10 p-4 cursor-text"
+        className="glass-card p-4 cursor-text"
       >
         <div className="flex flex-wrap items-center gap-2">
           {tags.map((tag) => (
@@ -79,7 +79,7 @@ export default function IngredientInput({ tags, onAdd, onRemove }: IngredientInp
       </div>
 
       {focused && suggestions.length > 0 && (
-        <ul className="absolute z-20 mt-2 w-full overflow-hidden bg-clay-card border border-cream/10 rounded-xl">
+        <ul className="glass-card-strong absolute z-20 mt-2 w-full overflow-hidden rounded-xl">
           {suggestions.map((item) => (
             <li key={item}>
               <button

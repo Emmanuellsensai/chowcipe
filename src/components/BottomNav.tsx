@@ -51,7 +51,7 @@ const TABS: { key: NavTab; label: string; Icon: (p: { className?: string }) => J
 
 export default function BottomNav({ active, onChange }: BottomNavProps) {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-clay-card border-t border-cream/10 pb-4 pt-2 px-2">
+    <nav className="glass-nav md:hidden fixed bottom-0 left-0 right-0 z-50 pb-4 pt-2 px-2">
       <ul className="flex items-stretch justify-around">
         {TABS.map(({ key, label, Icon }) => {
           const isActive = active === key

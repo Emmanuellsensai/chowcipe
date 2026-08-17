@@ -95,7 +95,16 @@ export default function AppPage({ onExit }: AppPageProps) {
   const goTab = (tab: NavTab) => setView(tab)
 
   return (
-    <div className="min-h-screen bg-clay pb-28 md:pb-16">
+    // No bg-clay here: the body paints the base colour, and an opaque wrapper
+    // would hide the ambient orbs the glass cards blur against.
+    <div className="relative min-h-screen pb-28 md:pb-16">
+      {/* Ambient glow for glass blur */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[10%] -left-[15%] w-[55vw] h-[55vw] rounded-full bg-palm-oil/[0.06] blur-[130px]" />
+        <div className="absolute top-[60%] right-[5%] w-[40vw] h-[40vw] rounded-full bg-buka-red/[0.04] blur-[110px]" />
+        <div className="absolute -bottom-[10%] left-[30%] w-[50vw] h-[50vw] rounded-full bg-crayfish/[0.05] blur-[120px]" />
+      </div>
+
       <Navbar
         onStart={() => setView('home')}
         ctaLabel="New search"
@@ -108,7 +117,7 @@ export default function AppPage({ onExit }: AppPageProps) {
         ]}
       />
 
-      <main className="px-5 pt-8 md:px-12 md:pt-28 lg:px-20 mx-auto max-w-6xl">
+      <main className="relative z-10 px-5 pt-8 md:px-12 md:pt-28 lg:px-20 mx-auto max-w-6xl">
         {view === 'home' && (
           <section className="animate-fadeIn">
             <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
@@ -141,7 +150,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                     <button
                       key={item}
                       onClick={() => addIngredient(item)}
-                      className="font-dm text-xs text-crayfish border border-cream/10 rounded-full px-3 py-1.5 hover:border-palm-oil/50 hover:text-cream transition-colors"
+                      className="glass-subtle font-dm text-xs text-crayfish rounded-full px-4 py-2 hover:border-palm-oil/50 hover:text-cream transition-colors"
                     >
                       + {item}
                     </button>
@@ -183,7 +192,7 @@ export default function AppPage({ onExit }: AppPageProps) {
             {loading && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
                 {[0, 1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="bg-clay-card rounded-2xl overflow-hidden animate-pulse">
+                  <div key={i} className="glass-card overflow-hidden animate-pulse">
                     <div className="h-40 bg-cream/5" />
                     <div className="p-4 space-y-3">
                       <div className="h-3 w-1/3 bg-cream/5 rounded" />
@@ -197,7 +206,7 @@ export default function AppPage({ onExit }: AppPageProps) {
             )}
 
             {!loading && error && (
-              <div className="mt-8 bg-clay-card border border-buka-red/40 rounded-2xl p-6">
+              <div className="glass-card mt-8 border-buka-red/40 p-6">
                 <p className="font-dm text-sm text-cream">{error}</p>
                 <button
                   onClick={handleFind}
@@ -209,7 +218,7 @@ export default function AppPage({ onExit }: AppPageProps) {
             )}
 
             {!loading && !error && recipes.length === 0 && (
-              <div className="mt-8 bg-clay-card rounded-2xl p-6">
+              <div className="glass-card mt-8 p-6">
                 <p className="font-dm text-sm text-crayfish">
                   No recipes yet. Add your ingredients and tap Find recipes.
                 </p>
@@ -271,7 +280,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                 selected.availableIngredients.map((item) => (
                   <span
                     key={item}
-                    className="font-dm text-sm text-cream bg-clay-card border border-palm-oil/30 rounded-full px-3 py-1.5"
+                    className="glass-subtle font-dm text-sm text-cream border-palm-oil/30 rounded-full px-3 py-1.5"
                   >
                     {item}
                   </span>
@@ -289,7 +298,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                 {selected.missingIngredients.map((item) => (
                   <div
                     key={`${item.local}-${item.common}`}
-                    className="bg-clay-card border border-palm-oil/20 rounded-2xl p-4"
+                    className="glass-card border-palm-oil/20 p-4"
                   >
                     <p className="font-dm font-semibold text-lg text-cream">{item.local}</p>
                     <p className="font-dm text-xs uppercase tracking-wide text-palm-oil mt-0.5">
@@ -321,7 +330,7 @@ export default function AppPage({ onExit }: AppPageProps) {
             </ol>
 
             {selected.tips && (
-              <div className="mt-10 bg-clay-card border border-cream/10 rounded-2xl p-5">
+              <div className="glass-card mt-10 p-5">
                 <p className="font-dm text-xs uppercase tracking-wide text-palm-oil mb-2">
                   Kitchen tip
                 </p>
@@ -367,7 +376,7 @@ export default function AppPage({ onExit }: AppPageProps) {
 
             <form
               onSubmit={submitPrice}
-              className="mt-8 bg-clay-card border border-cream/10 rounded-2xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
+              className="glass-card-strong mt-8 p-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
               <label className="flex flex-col gap-2">
                 <span className="font-dm text-xs uppercase tracking-wide text-crayfish">Item</span>
@@ -375,7 +384,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                   value={form.item}
                   onChange={(e) => setForm({ ...form, item: e.target.value })}
                   placeholder="Tomatoes"
-                  className="bg-clay border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
+                  className="bg-clay/30 border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
                 />
               </label>
 
@@ -388,7 +397,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                   onChange={(e) => setForm({ ...form, price: e.target.value })}
                   inputMode="numeric"
                   placeholder="4500"
-                  className="bg-clay border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
+                  className="bg-clay/30 border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
                 />
               </label>
 
@@ -400,7 +409,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                   value={form.quantity}
                   onChange={(e) => setForm({ ...form, quantity: e.target.value })}
                   placeholder="1 basket / 1 paint bucket"
-                  className="bg-clay border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
+                  className="bg-clay/30 border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none placeholder:text-crayfish focus:border-palm-oil/50"
                 />
               </label>
 
@@ -409,7 +418,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                 <select
                   value={form.market}
                   onChange={(e) => setForm({ ...form, market: e.target.value })}
-                  className="bg-clay border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none focus:border-palm-oil/50"
+                  className="bg-clay/30 border border-cream/10 rounded-xl px-4 py-2.5 font-dm text-sm text-cream outline-none focus:border-palm-oil/50"
                 >
                   {MARKETS.map((market) => (
                     <option key={market} value={market} className="bg-clay">
@@ -437,7 +446,7 @@ export default function AppPage({ onExit }: AppPageProps) {
               {prices.map((entry) => (
                 <li
                   key={entry.id}
-                  className="bg-clay-card rounded-2xl p-4 flex items-start justify-between gap-4"
+                  className="glass-subtle p-4 flex items-start justify-between gap-4"
                 >
                   <div>
                     <p className="font-dm font-semibold text-lg text-cream">{entry.item}</p>
@@ -468,7 +477,7 @@ export default function AppPage({ onExit }: AppPageProps) {
             </p>
 
             {history.length === 0 ? (
-              <div className="mt-8 bg-clay-card rounded-2xl p-6">
+              <div className="glass-card mt-8 p-6">
                 <p className="font-dm text-sm text-crayfish">
                   Nothing logged yet. Open a recipe and tap I cooked this.
                 </p>
@@ -479,7 +488,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                   {history.map((meal, i) => (
                     <li
                       key={`${meal.name}-${meal.date}-${i}`}
-                      className="bg-clay-card rounded-2xl p-4 flex items-center justify-between gap-4"
+                      className="glass-subtle p-4 flex items-center justify-between gap-4"
                     >
                       <span className="font-dm font-semibold text-lg text-cream">{meal.name}</span>
                       <span className="font-dm text-xs text-crayfish">{meal.date}</span>

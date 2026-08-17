@@ -1,25 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DISHES, Dish } from '../data/dishes'
 
 interface HeroProps {
   onStart?: () => void;
 }
 
-function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
-  const ref = useRef<HTMLVideoElement | null>(null)
-
-  // Only the active video plays — the other nine stay paused to save memory.
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    if (active) {
-      const play = el.play()
-      if (play && typeof play.catch === 'function') play.catch(() => {})
-    } else {
-      el.pause()
-    }
-  }, [active])
-
+function DishImage({ dish, active, eager }: { dish: Dish; active: boolean; eager: boolean }) {
   return (
     <div
       className={`absolute inset-0 transition-opacity duration-700 ease-out ${
@@ -28,17 +14,38 @@ function DishVideo({ dish, active }: { dish: Dish; active: boolean }) {
       aria-hidden={!active}
       style={{ background: dish.fallbackColor }}
     >
-      <video
-        ref={ref}
-        src={dish.videoSrc}
-        muted
-        autoPlay
-        loop
-        playsInline
-        preload="metadata"
+      <img
+        src={dish.imageSrc}
+        alt={dish.name}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
         className="h-full w-full object-cover"
       />
     </div>
+  )
+}
+
+// Only the active dish gets a <video>. Ten autoplaying videos would mean ten
+// concurrent downloads on first paint; this keeps at most one in flight, layered
+// over the poster image so there is never a blank frame while it buffers.
+function ActiveVideo({ dish }: { dish: Dish }) {
+  const [ready, setReady] = useState(false)
+
+  return (
+    <video
+      key={dish.id}
+      src={dish.videoSrc}
+      poster={dish.imageSrc}
+      muted
+      autoPlay
+      loop
+      playsInline
+      preload="auto"
+      onCanPlay={() => setReady(true)}
+      className={`absolute inset-0 z-[1] h-full w-full object-cover transition-opacity duration-700 ease-out ${
+        ready ? 'opacity-100' : 'opacity-0'
+      }`}
+    />
   )
 }
 
@@ -51,7 +58,7 @@ function DishThumb({
   isActive: boolean;
   onSelect: () => void;
 }) {
-  const [posterFailed, setPosterFailed] = useState(false)
+  const [imageFailed, setImageFailed] = useState(false)
 
   const ring = isActive ? 'border-cream opacity-100' : 'border-transparent opacity-60'
 
@@ -67,7 +74,7 @@ function DishThumb({
           isActive ? 'opacity-100' : 'opacity-0'
         }`}
       />
-      {posterFailed ? (
+      {imageFailed ? (
         <div
           style={{ background: dish.fallbackColor }}
           className={`h-10 w-10 rounded-full border-2 flex items-center justify-center font-semibold text-sm text-white transition-all duration-300 ${ring}`}
@@ -76,9 +83,9 @@ function DishThumb({
         </div>
       ) : (
         <img
-          src={dish.poster}
+          src={dish.imageSrc}
           alt={dish.name}
-          onError={() => setPosterFailed(true)}
+          onError={() => setImageFailed(true)}
           style={{ background: dish.fallbackColor }}
           className={`h-10 w-10 rounded-full object-cover border-2 transition-all duration-300 ${ring}`}
         />
@@ -108,10 +115,12 @@ export default function Hero({ onStart }: HeroProps) {
       onMouseLeave={() => setIsPaused(false)}
     >
       {DISHES.map((dish, i) => (
-        <DishVideo key={dish.id} dish={dish} active={i === active} />
+        <DishImage key={dish.id} dish={dish} active={i === active} eager={i === 0} />
       ))}
 
-      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/40 via-black/10 to-black/70" />
+      <ActiveVideo dish={activeDish} />
+
+      <div className="absolute inset-0 z-[2] bg-gradient-to-b from-black/40 via-black/10 to-black/70" />
 
       <div className="relative z-10 flex h-full flex-col justify-between px-6 pb-8 pt-12 md:px-12 md:pb-10 lg:px-20">
         <div className="flex flex-1 flex-col items-center justify-center text-center">

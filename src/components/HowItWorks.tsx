@@ -117,7 +117,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-clay px-6 py-20 pt-20 md:px-12 md:py-28 lg:px-20">
+    <section id="how-it-works" className="px-6 py-20 pt-20 md:px-12 md:py-28 lg:px-20">
       <div className="mx-auto max-w-6xl">
         <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
           How it works
