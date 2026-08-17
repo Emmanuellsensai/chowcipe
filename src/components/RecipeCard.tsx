@@ -74,7 +74,7 @@ export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
         />
       ) : (
         <div className="h-48 w-full rounded-t-2xl bg-gradient-to-br from-palm-oil/40 to-buka-red/40 flex items-center justify-center">
-          <span className="font-playfair text-4xl text-cream">
+          <span className="font-dm font-semibold text-4xl text-cream">
             {recipe.name.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -82,7 +82,7 @@ export default function RecipeCard({ recipe, onClick }: RecipeCardProps) {
 
       <div className="p-4">
         <p className="font-dm text-[11px] uppercase tracking-wide text-crayfish">{recipe.tribe}</p>
-        <h3 className="font-playfair text-xl text-cream mt-1">{recipe.name}</h3>
+        <h3 className="font-dm font-semibold text-xl text-cream mt-1">{recipe.name}</h3>
         <p className="font-dm text-sm text-crayfish mt-2 leading-relaxed">{recipe.whyCook}</p>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-dm text-xs text-crayfish mt-3">

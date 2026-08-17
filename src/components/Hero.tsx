@@ -115,13 +115,13 @@ export default function Hero({ onStart }: HeroProps) {
 
       <div className="relative z-10 flex h-full flex-col justify-between px-6 pb-8 pt-12 md:px-12 md:pb-10 lg:px-20">
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <p className="font-dm text-xs uppercase tracking-widest text-crayfish mb-4">
+          <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-4">
             AI-Powered Nigerian Meal Planner
           </p>
           <h1 className="font-playfair italic text-cream text-4xl md:text-6xl lg:text-8xl leading-tight">
-            Nigerian food,
+            Cook what you
             <br />
-            decided.
+            already have.
           </h1>
           <p className="font-dm text-base md:text-lg text-cream/70 mt-4">
             Tell Chowcipe what is in your kitchen.
@@ -137,7 +137,7 @@ export default function Hero({ onStart }: HeroProps) {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-end">
             <div key={activeDish.name} className="animate-fadeUp">
-              <h2 className="font-playfair font-normal text-cream text-2xl md:text-4xl">
+              <h2 className="font-dm font-semibold text-cream text-2xl md:text-4xl">
                 {activeDish.name}
               </h2>
               <p className="font-dm text-xs uppercase tracking-wide text-crayfish mt-1">

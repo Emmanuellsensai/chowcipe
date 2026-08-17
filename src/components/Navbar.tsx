@@ -37,7 +37,7 @@ export default function Navbar({ onStart, ctaLabel = 'Start cooking', items = DE
     >
       <button
         onClick={onStart}
-        className="font-playfair text-2xl text-palm-oil tracking-tight"
+        className="font-dm font-semibold text-2xl text-palm-oil tracking-tight"
         aria-label="Chowcipe home"
       >
         Chowcipe

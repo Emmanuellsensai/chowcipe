@@ -18,9 +18,9 @@ export default function Landing({ onStart }: LandingProps) {
       <BottomCTA onStart={onStart} />
       <footer className="bg-clay px-6 py-10 md:px-12 lg:px-20 border-t border-cream/10">
         <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-3">
-          <span className="font-playfair text-palm-oil text-xl">Chowcipe</span>
+          <span className="font-dm font-semibold text-palm-oil text-xl">Chowcipe</span>
           <p className="font-dm text-xs text-crayfish">
-            Built for WEMA Hackaholics 7.0. Nigerian food, decided.
+            Built for WEMA Hackaholics 7.0. Cook what you already have.
           </p>
         </div>
       </footer>

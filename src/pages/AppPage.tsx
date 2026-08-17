@@ -111,7 +111,7 @@ export default function AppPage({ onExit }: AppPageProps) {
       <main className="px-5 pt-8 md:px-12 md:pt-28 lg:px-20 mx-auto max-w-6xl">
         {view === 'home' && (
           <section className="animate-fadeIn">
-            <p className="font-dm text-xs uppercase tracking-widest text-crayfish mb-3">
+            <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
               Your kitchen
             </p>
             <h1 className="font-playfair italic text-cream text-3xl md:text-5xl leading-tight">
@@ -265,7 +265,7 @@ export default function AppPage({ onExit }: AppPageProps) {
               </span>
             </div>
 
-            <h2 className="font-playfair text-cream text-2xl mt-10 mb-4">You already have</h2>
+            <h2 className="font-dm font-semibold text-cream text-2xl mt-10 mb-4">You already have</h2>
             <div className="flex flex-wrap gap-2">
               {selected.availableIngredients?.length ? (
                 selected.availableIngredients.map((item) => (
@@ -281,7 +281,7 @@ export default function AppPage({ onExit }: AppPageProps) {
               )}
             </div>
 
-            <h2 className="font-playfair text-cream text-2xl mt-10 mb-4">
+            <h2 className="font-dm font-semibold text-cream text-2xl mt-10 mb-4">
               What you still need to buy
             </h2>
             {selected.missingIngredients?.length ? (
@@ -291,7 +291,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                     key={`${item.local}-${item.common}`}
                     className="bg-clay-card border border-palm-oil/20 rounded-2xl p-4"
                   >
-                    <p className="font-playfair text-lg text-cream">{item.local}</p>
+                    <p className="font-dm font-semibold text-lg text-cream">{item.local}</p>
                     <p className="font-dm text-xs uppercase tracking-wide text-palm-oil mt-0.5">
                       {item.common}
                     </p>
@@ -306,7 +306,7 @@ export default function AppPage({ onExit }: AppPageProps) {
               </p>
             )}
 
-            <h2 className="font-playfair text-cream text-2xl mt-10 mb-4">How to cook it</h2>
+            <h2 className="font-dm font-semibold text-cream text-2xl mt-10 mb-4">How to cook it</h2>
             <ol className="space-y-4">
               {selected.steps?.map((step, i) => (
                 <li key={i} className="flex gap-4">
@@ -355,7 +355,7 @@ export default function AppPage({ onExit }: AppPageProps) {
 
         {view === 'markets' && (
           <section className="animate-fadeIn max-w-3xl">
-            <p className="font-dm text-xs uppercase tracking-widest text-crayfish mb-3">
+            <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
               Market prices
             </p>
             <h1 className="font-playfair italic text-cream text-3xl md:text-5xl">
@@ -430,7 +430,7 @@ export default function AppPage({ onExit }: AppPageProps) {
               </div>
             </form>
 
-            <h2 className="font-playfair text-cream text-2xl mt-10 mb-4">
+            <h2 className="font-dm font-semibold text-cream text-2xl mt-10 mb-4">
               Community submissions
             </h2>
             <ul className="space-y-3">
@@ -440,7 +440,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                   className="bg-clay-card rounded-2xl p-4 flex items-start justify-between gap-4"
                 >
                   <div>
-                    <p className="font-playfair text-lg text-cream">{entry.item}</p>
+                    <p className="font-dm font-semibold text-lg text-cream">{entry.item}</p>
                     <p className="font-dm text-xs text-crayfish mt-1">
                       {entry.quantity} · {entry.market}
                     </p>
@@ -457,7 +457,7 @@ export default function AppPage({ onExit }: AppPageProps) {
 
         {view === 'history' && (
           <section className="animate-fadeIn max-w-3xl">
-            <p className="font-dm text-xs uppercase tracking-widest text-crayfish mb-3">
+            <p className="font-playfair text-xs uppercase tracking-widest text-crayfish mb-3">
               Meal history
             </p>
             <h1 className="font-playfair italic text-cream text-3xl md:text-5xl">
@@ -481,7 +481,7 @@ export default function AppPage({ onExit }: AppPageProps) {
                       key={`${meal.name}-${meal.date}-${i}`}
                       className="bg-clay-card rounded-2xl p-4 flex items-center justify-between gap-4"
                     >
-                      <span className="font-playfair text-lg text-cream">{meal.name}</span>
+                      <span className="font-dm font-semibold text-lg text-cream">{meal.name}</span>
                       <span className="font-dm text-xs text-crayfish">{meal.date}</span>
                     </li>
                   ))}

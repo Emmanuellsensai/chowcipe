@@ -1,6 +1,6 @@
 # Chowcipe
 
-**Nigerian food, decided.** An AI-powered Nigerian meal planner: tell Chowcipe what is in your kitchen and it returns Nigerian dishes you can cook right now, with exact quantities, local ingredient names and community-sourced market prices.
+**Cook what you already have.** An AI-powered Nigerian meal planner: tell Chowcipe what is in your kitchen and it returns Nigerian dishes you can cook right now, with exact quantities, local ingredient names and community-sourced market prices.
 
 Built for the WEMA Hackaholics 7.0 hackathon.
 
